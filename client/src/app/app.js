@@ -10,6 +10,8 @@ angular.module('app').config(['$routeProvider', '$locationProvider', function ($
   $routeProvider.otherwise({redirectTo:'/'});
 }]);
 
+
+
 angular.module('app').controller('AppCtrl', ['$scope', function($scope) {
   $scope.$on('$routeChangeError', function(event, current, previous, rejection){
 
