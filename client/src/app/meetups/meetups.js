@@ -1,4 +1,4 @@
-angular.module('meetups',['ngResource'],['$routeProvider',function($routeProvider){
+angular.module('meetups',['ngResource','ui.bootstrap.showErrors'],['$routeProvider',function($routeProvider){
     $routeProvider
     .when('/',{
         templateUrl: 'app/meetups/list.tpl.html',
@@ -73,14 +73,27 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
                 loadMeetups();
 
             $scope.createMeetup = function(){
-                var createMeetupResource = new MeetupResource();
-                createMeetupResource.name = $scope.meetupName;
-                createMeetupResource.$save(function(result){
-                    $scope.meetupName = '';
-                    socket.emit('meetup added',result);
-                    $scope.meetups.push(result);
-                     $location.path("/")
-                });
+                $scope.$broadcast('show-errors-check-validity'); 
+                //broadcast the errors for all the fields which are required to be valid
+                if ($scope.meetupCreateForm.$valid){ 
+                    var createMeetupResource = new MeetupResource();
+                    createMeetupResource.name = $scope.meetupName;
+                    createMeetupResource.$save(function(result){
+                        $scope.meetupName = '';
+                        socket.emit('meetup added',result);
+                        $scope.meetups.push(result);
+                        $location.path("/")
+                    });
+                }
+            }//createMeetup()
+            
+            $scope.reset = function(){
+                $scope.$broadcast('show-errors-reset');
+                $scope.meetupName = "";
+                $scope.meetupDate = "";
+                $scope.meetupFromTime = "";
+                $scope.meetupToTime = "";
+                $scope.meetupVenue = "";
             }
                
             

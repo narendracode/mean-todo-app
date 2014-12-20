@@ -11,7 +11,8 @@ module.exports = function(grunt){
 			},
 			scripts : {
 				files: {
-					'angular-full': 'angular-full'
+					'angular-full': 'angular-full',
+                    'jquery-ui': 'jquery-ui'
 				}
 			}
 		},
@@ -21,7 +22,8 @@ module.exports = function(grunt){
 					'mkdir client/vendor/flat-ui',
 					'cp -r bower_components/flat-ui/dist/* client/vendor/flat-ui/',
 					'mkdir client/vendor/jquery',
-					'cp -r bower_components/jquery/dist/* client/vendor/jquery/'
+					'cp -r bower_components/jquery/dist/* client/vendor/jquery/',
+                    'rm -r bower_components'
 				].join('&&')
 			}	
 		}
@@ -29,7 +31,7 @@ module.exports = function(grunt){
 	});	
 	grunt.loadNpmTasks('grunt-bowercopy');
 	grunt.loadNpmTasks('grunt-contrib-copy');
-        grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-shell');
 
 	grunt.registerTask('bower',['bowercopy','shell']);
 };

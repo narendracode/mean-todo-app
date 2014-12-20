@@ -8,25 +8,34 @@
 
     <link href="vendor/flat-ui/css/vendor/bootstrap.min.css" rel="stylesheet">
     <link href="vendor/flat-ui/css/flat-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/jquery-ui/themes/smoothness/jquery-ui.min.css">
+    <link href="assets/css/style.css" rel="stylesheet">
     
   </head>
   <body ng-controller="AppCtrl">
     <div ng-include="'app/header.tpl.html'"></div>
     <div ng-view class="container-fluid"></div>
      
-    <script src="vendor/flat-ui/js/vendor/jquery.min.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/flat-ui/js/vendor/html5shiv.js"></script>
     <script src="vendor/flat-ui/js/vendor/respond.min.js"></script>
     <script src="vendor/flat-ui/js/vendor/video.js"></script>
     <script src="vendor/flat-ui/js/flat-ui.min.js"></script>
     
-<script type="text/javascript" src="vendor/angular-full/angular.min.js"></script>
-<script src="vendor/angular-full/angular-resource.min.js"></script>
-<script src="vendor/angular-full/angular-route.min.js"></script>
-<script src="/socket.io/socket.io.js"> </script>
-<script src="common/socketservice.js"></script>
-<script src="app/app.js"></script>  
-<script src="app/meetups/meetups.js"></script>  
+    <script src="vendor/angular-full/angular.min.js"></script>
+    <script src="vendor/angular-full/angular-resource.min.js"></script>
+    <script src="vendor/angular-full/angular-route.min.js"></script>
+    
+    <script src="vendor/jquery-ui/ui/jquery-ui.js"></script>
+    
+    
+    <script src="/socket.io/socket.io.js"> </script>
+    <script src="common/directives/FormShowError.js"></script>
+    <script src="common/socketservice.js"></script>
+    <script src="app/app.js"></script>  
+    <script src="app/meetups/meetups.js"></script> 
+ 
+      
 </body>
 </html>
 
