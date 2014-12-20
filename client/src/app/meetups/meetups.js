@@ -1,4 +1,4 @@
-angular.module('meetups',['ngResource','ui.bootstrap.showErrors'],['$routeProvider',function($routeProvider){
+angular.module('meetups',['ngResource','ui.bootstrap.showErrors','angularMoment'],['$routeProvider',function($routeProvider){
     $routeProvider
     .when('/',{
         templateUrl: 'app/meetups/list.tpl.html',
@@ -78,6 +78,11 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
                 if ($scope.meetupCreateForm.$valid){ 
                     var createMeetupResource = new MeetupResource();
                     createMeetupResource.name = $scope.meetupName;
+                    createMeetupResource.date = new Date($scope.meetupDate);
+                    createMeetupResource.fromTime = $scope.meetupFromTime;
+                    createMeetupResource.toTime = $scope.meetupToTime;
+                    createMeetupResource.venue = $scope.meetupVenue;
+
                     createMeetupResource.$save(function(result){
                         $scope.meetupName = '';
                         socket.emit('meetup added',result);

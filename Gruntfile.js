@@ -12,7 +12,9 @@ module.exports = function(grunt){
 			scripts : {
 				files: {
 					'angular-full': 'angular-full',
-                    'jquery-ui': 'jquery-ui'
+					'jquery-ui': 'jquery-ui',
+					'moment': 'moment',
+                    "angular-moment":'angular-moment'
 				}
 			}
 		},
@@ -23,7 +25,7 @@ module.exports = function(grunt){
 					'cp -r bower_components/flat-ui/dist/* client/vendor/flat-ui/',
 					'mkdir client/vendor/jquery',
 					'cp -r bower_components/jquery/dist/* client/vendor/jquery/',
-                    'rm -r bower_components'
+                    'rm -r bower_components/*'
 				].join('&&')
 			}	
 		}
