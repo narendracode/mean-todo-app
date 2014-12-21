@@ -1,57 +1,51 @@
-angular.module('meetups',['ngResource','ui.bootstrap.showErrors','angularMoment'],['$routeProvider',function($routeProvider){
-    $routeProvider
-    .when('/',{
-        templateUrl: 'app/meetups/list.tpl.html',
-        controller: 'MeetupsController'
+angular.module('meetups',['ngResource','ui.bootstrap.showErrors','angularMoment','ui.router','meetup.services']);
+
+angular.module('meetups').config(['$stateProvider','$urlRouterProvider',
+
+function($stateProvider,$urlRouterProvider){
+    $urlRouterProvider.otherwise("/");
+    $stateProvider
+    .state('meetup', {
+      url: "/meetup/",
+      templateUrl: 'app/meetups/list.tpl.html',
+      controller: 'MeetupsController'
     })
-    .when('/create',{
-        templateUrl : 'app/meetups/create.tpl.html',
-        controller: 'MeetupsController'
+    .state('meetupcreate',{
+      url: "/meetup/create/",
+      templateUrl : 'app/meetups/create.tpl.html',
+      controller: 'MeetupsController'
     })
-    .when('/:id',{
-        templateUrl: 'app/meetups/details.tpl.html',
-        controller: 'MeetupsController'
+    .state('meetupview', {
+      url: "/meetup/:id/",
+      templateUrl : 'app/meetups/details.tpl.html',
+      controller: 'MeetupsController'
     })
-    .when('/:id/edit',{
-        templateUrl: 'app/meetups/edit.tpl.html',
-        controller: 'MeetupsController'
-    })
-    .otherwise({redirectTo: '/'})
-    ;
-}]);
+     .state('meetupedit', {
+      url: "/meetup/:id/edit/",
+      templateUrl: 'app/meetups/edit.tpl.html',
+      controller: 'MeetupsController'
+    });                               
+}
+]);
+
+
 
 angular.module('meetups').factory('socket',function(){
     var socket = io.connect("http://192.168.0.13:3000");
     return socket;
 });
 
-angular.module('meetups').factory('MeetupUpdateService',function($resource){
-    return $resource('meetup/:id', 
-    {
-        id: '@id'
-    },
-    {
-        'update': { method:'PUT' }
-    },
-    {
-        'get': { method: 'GET', isArray: false }
-    },
-    {
-        'delete': { method: 'DELETE'}
-    }
-);
-});
 
-angular.module('meetups').controller('MeetupsController',['$scope','$resource','$routeParams','$location','MeetupUpdateService','socket',
-                                                          function($scope,$resource,$routeParams,$location,MeetupUpdateService,socket){
+angular.module('meetups').controller('MeetupsController',['$scope','$resource','$state','$location','MeetupUpdateService','socket',
+                                                          function($scope,$resource,$state,$location,MeetupUpdateService,socket){
     var MeetupResource = $resource('/meetup/:id'); //this will be the base URL for our rest express route.
             $scope.appname = "Mean Demo";
             $scope.meetupUpdateService = new MeetupUpdateService();
             var loadMeetups = function(){
                 return MeetupResource.query(function(results){
                 $scope.meetups = results;
-                    if($routeParams.id){
-                        $scope.findMeetup($routeParams.id);
+                    if($state.params.id){
+                        $scope.findMeetup($state.params.id);
                     }
                 });
             }
@@ -87,7 +81,7 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
                         $scope.meetupName = '';
                         socket.emit('meetup added',result);
                         $scope.meetups.push(result);
-                        $location.path("/")
+                        $location.path("/meetup/")
                     });
                 }
             }//createMeetup()
@@ -114,14 +108,14 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
                 $scope.meetupUpdateService.name = $scope.meetup.name;
                 $scope.meetupUpdateService.$update({id:_id},function(result){
                         socket.emit('meetup updated',result);
-                    $location.path("/")
+                    $location.path("/meetup/")
                 });
             }//updateMeetup
             
             $scope.getMeetup = function(_id){
                 $scope.meetupUpdateService.$get({id : _id},function(result){
                     $scope.meetup = result;
-                    $location.path("/"+_id)
+                    $location.path("/meetup/"+_id+"/")
                 });
                 $scope.meetup
             }//getMeetup
@@ -129,7 +123,7 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
             $scope.deleteMeetup = function(_id){
                 $scope.meetupUpdateService.$delete({id: _id},function(result){
                      socket.emit('meetup deleted',result);
-                    $location.path("/")
+                    $location.path("/meetup/")
                     /*  MeetupResource.query(function(results){
                         $scope.meetups = results;
                         $location.path("/")

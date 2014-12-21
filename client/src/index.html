@@ -14,7 +14,8 @@
   </head>
   <body ng-controller="AppCtrl">
     <div ng-include="'app/header.tpl.html'"></div>
-    <div ng-view class="container-fluid"></div>
+    <div ui-view class="container-fluid"></div>
+     
      
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/flat-ui/js/vendor/html5shiv.js"></script>
@@ -24,8 +25,8 @@
     
     <script src="vendor/angular-full/angular.min.js"></script>
     <script src="vendor/angular-full/angular-resource.min.js"></script>
-    <script src="vendor/angular-full/angular-route.min.js"></script>
-    
+   <!--<script src="vendor/angular-full/angular-route.min.js"></script> -->
+    <script src="vendor/angular-ui-router/angular-ui-router.min.js"></script>
     <script src="vendor/jquery-ui/ui/jquery-ui.js"></script>
     <script src="vendor/moment/moment.js"></script>
     <script src="vendor/angular-moment/angular-moment.js"></script>
@@ -33,6 +34,7 @@
     <script src="common/directives/FormShowError.js"></script>
     <script src="common/socketservice.js"></script>
     <script src="app/app.js"></script>  
+    <script src="app/meetups/MeetupServices.js"></script> 
     <script src="app/meetups/meetups.js"></script> 
      
 </body>

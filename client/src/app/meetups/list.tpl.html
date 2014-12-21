@@ -1,4 +1,4 @@
-<a href="/#/create" class="btn btn-info">Create New Meetup</a> 
+<a href="/#/meetup/create/" class="btn btn-info">Create New Meetup</a> 
 <h1>
     There are {{meetups.length}}  meetups.
 </h1>   
@@ -10,10 +10,10 @@
        </tr>
        <tr ng-repeat="meetup in meetups">
             <td>
-            <a href="/#/{{meetup._id}}" ng-click="findMeetup(meetup._id)">                         {{meetup.name}} </a>
+            <a href="/#/meetup/{{meetup._id}}/" ng-click="findMeetup(meetup._id)">                         {{meetup.name}} </a>
             </td>
             <td> 
-              <a class="btn btn-inverse"   href="/#/{{meetup._id}}/edit" ng-click="findMeetup(meetup._id)">
+              <a class="btn btn-inverse"   href="/#/meetup/{{meetup._id}}/edit/" ng-click="findMeetup(meetup._id)">
                Edit
                </a>
                             <!--   <button  class="btn btn-inverse" ng-click="findMeetup(meetup._id)">

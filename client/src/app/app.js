@@ -1,13 +1,18 @@
 angular.module('app', [
                 'ngResource',
-                'ngRoute',
+                'ui.router',
                 'meetups'
                 ]
 );
 
-angular.module('app').config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
-  //$locationProvider.html5Mode(true);
-  $routeProvider.otherwise({redirectTo:'/'});
+angular.module('app').config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise("/")
+    $stateProvider
+    .state('index', {
+      url: "/",
+      templateUrl: "app/index.tpl.html",
+      controller: 'AppCtrl'
+    });
 }]);
 
 

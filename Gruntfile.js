@@ -14,7 +14,7 @@ module.exports = function(grunt){
 					'angular-full': 'angular-full',
 					'jquery-ui': 'jquery-ui',
 					'moment': 'moment',
-                    "angular-moment":'angular-moment'
+                    			'angular-moment': 'angular-moment'
 				}
 			}
 		},
@@ -25,7 +25,9 @@ module.exports = function(grunt){
 					'cp -r bower_components/flat-ui/dist/* client/vendor/flat-ui/',
 					'mkdir client/vendor/jquery',
 					'cp -r bower_components/jquery/dist/* client/vendor/jquery/',
-                    'rm -r bower_components/*'
+					'mkdir client/vendor/angular-ui-router',
+					'cp  bower_components/angular-ui-router/release/* client/vendor/angular-ui-router/',
+                    			'rm -r bower_components/*'
 				].join('&&')
 			}	
 		}
