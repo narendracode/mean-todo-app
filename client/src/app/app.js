@@ -22,3 +22,12 @@ angular.module('app').controller('AppCtrl', ['$scope', function($scope) {
 
   });
 }]);
+
+
+angular.module('app').controller('HeaderCtrl', ['$scope','$location', function($scope,$location) {
+
+    $scope.meetup = function(){
+        $location.path("/meetup/");
+    }
+
+}]);

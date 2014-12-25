@@ -93,6 +93,7 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
                 $scope.meetupFromTime = "";
                 $scope.meetupToTime = "";
                 $scope.meetupVenue = "";
+                 $location.path("/meetup/create/")
             }
                
             

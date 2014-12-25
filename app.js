@@ -3,10 +3,12 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
 var mongoose = require("mongoose");
-
+var passport = require('passport');
+var flash = require("connect-flash");
 var app = express();
 
 // view engine setup
@@ -18,7 +20,13 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser("mean-to-do-app-secret"));
+app.use(session({secret : "mean-to-do-app-secret", resave : true, saveUninitialized : true}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
 app.use(express.static(path.join(__dirname, 'client/src')));
 app.use('/vendor',express.static(path.join(__dirname, 'client/vendor')));
 app.use('/app',express.static(path.join(__dirname, 'client/src/app')));
