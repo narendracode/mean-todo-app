@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-//var passport = require('../app/authorization/passport.js');
 var passport = require('passport');
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -19,7 +18,7 @@ router.post('/signup',function(req, res, next){
             console.log("****** req:"+req);
             return res.json(user);
         }
-        if(!user){ return res.json({'message':'Email already taken'}) }
+        if(!user){ return res.json({'message':'Account already exists with the email.'}) }
         
     })(req, res, next);
 });
@@ -36,7 +35,7 @@ router.post('/login',function(req, res, next){
             console.log("****** req:"+req);
             return res.json(user);
         }
-        if(!user){ return res.json({'message':'invalid username or password'}) }
+        if(!user){ return res.json({'message':info['loginMessage']}) }
         
     })(req, res, next);
 });
