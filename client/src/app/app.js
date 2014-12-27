@@ -1,7 +1,8 @@
 angular.module('app', [
                 'ngResource',
                 'ui.router',
-                'meetups'
+                'meetups',
+                'authorization'
                 ]
 );
 
@@ -12,7 +13,17 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
       url: "/",
       templateUrl: "app/index.tpl.html",
       controller: 'AppCtrl'
+    }).state('login', {
+      url: "/login/",
+      templateUrl: 'app/authorization/login.tpl.html',
+      controller: 'AuthController'
+    })
+    .state('signup',{
+      url: "/signup/",
+      templateUrl : 'app/authorization/signup.tpl.html',
+      controller: 'AuthController'
     });
+
 }]);
 
 

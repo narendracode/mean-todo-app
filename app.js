@@ -46,7 +46,7 @@ connect();
 mongoose.connection.on('error',console.log);
 mongoose.connection.on('disconnected',connect);
 
-
+require('./app/authorization/passport')(passport); //settting up passport config
 require('./config/routes')(app);
 require('./config/express')(app);
 
