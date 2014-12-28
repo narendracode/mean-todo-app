@@ -1,4 +1,4 @@
-angular.module('meetups',['ngResource','ui.bootstrap.showErrors','angularMoment','ui.router','meetup.services']);
+angular.module('meetups',['ngResource','ui.bootstrap.showErrors','angularMoment','ui.router','meetup.services','authorization.services']);
 
 angular.module('meetups').config(['$stateProvider','$urlRouterProvider',
 
@@ -8,7 +8,10 @@ function($stateProvider,$urlRouterProvider){
     .state('meetup', {
       url: "/meetup/",
       templateUrl: 'app/meetups/list.tpl.html',
-      controller: 'MeetupsController'
+      controller: 'MeetupsController',
+      onEnter: function(){
+        console.log('##### onEnter is called in meetup state');
+      }
     })
     .state('meetupcreate',{
       url: "/meetup/create/",
@@ -27,6 +30,20 @@ function($stateProvider,$urlRouterProvider){
     });                               
 }
 ]);
+
+
+
+angular.module('meetups').run(function($rootScope,$location,IsAuthenticatedService) {
+    $rootScope.$on('$stateChangeStart', function() {
+        console.log('### route scope state change is called..'+IsAuthenticatedService.isLoggedIn);
+        if(!(!!IsAuthenticatedService.isLoggedIn)){
+            console.log('user not logged in');
+             $location.path("/login/")
+        }
+            
+    });
+});
+
 
 
 

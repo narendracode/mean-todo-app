@@ -9,7 +9,9 @@ var config = require('./config/config');
 var mongoose = require("mongoose");
 var passport = require('passport');
 var flash = require("connect-flash");
+//var xsrf = require('./app/utils/xsrf');
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +28,7 @@ app.use(session({secret : "mean-to-do-app-secret", resave : true, saveUninitiali
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+//app.use(xsrf);
 
 app.use(express.static(path.join(__dirname, 'client/src')));
 app.use('/vendor',express.static(path.join(__dirname, 'client/vendor')));

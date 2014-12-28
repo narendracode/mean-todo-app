@@ -2,7 +2,8 @@ angular.module('app', [
                 'ngResource',
                 'ui.router',
                 'meetups',
-                'authorization'
+                'authorization',
+                'authorization.services'
                 ]
 );
 
@@ -13,15 +14,6 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
       url: "/",
       templateUrl: "app/index.tpl.html",
       controller: 'AppCtrl'
-    }).state('login', {
-      url: "/login/",
-      templateUrl: 'app/authorization/login.tpl.html',
-      controller: 'AuthController'
-    })
-    .state('signup',{
-      url: "/signup/",
-      templateUrl : 'app/authorization/signup.tpl.html',
-      controller: 'AuthController'
     });
 
 }]);
@@ -35,10 +27,29 @@ angular.module('app').controller('AppCtrl', ['$scope', function($scope) {
 }]);
 
 
-angular.module('app').controller('HeaderCtrl', ['$scope','$location', function($scope,$location) {
+angular.module('app').controller('HeaderCtrl', ['$scope','$location','IsAuthenticatedService', function($scope,$location,IsAuthenticatedService) {
 
     $scope.meetup = function(){
         $location.path("/meetup/");
     }
+    
+    $scope.isAuthenticated = function(){
+        console.log("  ##### isAuthenticated is called :"+IsAuthenticatedService.isLoggedIn);
+        return IsAuthenticatedService.isLoggedIn;
+    }
+    
+    $scope.isNotLoggedIn = function(){
+        return !IsAuthenticatedService.isLoggedIn;
+    }
+    
+    $scope.logout = function(){
+        IsAuthenticatedService.logout(function(result){
+            console.log('#### result of log out :'+JSON.stringify(result));
+            if(result['status']==200){
+                $location.path("/login/");
+            }
+        });
+    }
+    
 
 }]);

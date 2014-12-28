@@ -29,8 +29,16 @@ exports.signupStrategy = new LocalStrategy({
                     newUser.save(function(err) {
                         if (err)
                             throw err;
-                        return done(null, newUser);
-                    });
+                       // return done(null, newUser);
+                         req.login(newUser, function(err) {  
+                             //We are using it to automatically login the user if the signup is successful.
+                             //req.login method is given by passport, 
+                             //if login is successful, it will store the user as req.user
+                            if (err) { return next(err); }
+                             console.log("########### user from passport signup:"+JSON.stringify(req.user));
+                            return done(null, newUser);
+                        });
+                    });   
                }
             });    
         });
@@ -61,7 +69,16 @@ exports.loginStrategy = new LocalStrategy({
 					// if there is user with that email, but password is wrong
 					return done(null, false, {'loginMessage': 'Password is wrong.'}); 
 				}
-                return done(null, user);
+                
+                req.login(user, function(err) {  
+                  //req.login method is given by passport, if login is successful 
+                  //it will store the user as req.user
+                     if (err){ 
+                         return next(err); 
+                     }
+                      return done(null, user);
+                });
+               // return done(null, user);
             });    
         });
     }                                      

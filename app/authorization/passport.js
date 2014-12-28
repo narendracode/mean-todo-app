@@ -1,4 +1,5 @@
 var local = require('./passport-strategy/local.js');
+var User = require('./models/UserModel.js');
 module.exports = function(passport) {
     // =========================================================================
     // passport session setup ==================================================
@@ -25,5 +26,5 @@ module.exports = function(passport) {
     // by default, if there was no name, it would just be called 'local'
     
     passport.use('local-signup', local.signupStrategy);
-     passport.use('local-login', local.loginStrategy);
+    passport.use('local-login', local.loginStrategy);
 }
