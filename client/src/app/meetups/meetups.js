@@ -42,7 +42,7 @@ angular.module('meetups').run(function($rootScope,$location,IsAuthenticatedServi
 */
 
 angular.module('meetups').factory('socket',function(){
-    var socket = io.connect("http://localhost:3000");
+    var socket = io.connect("http://localhost:3000/meetup");
     return socket;
 });
 

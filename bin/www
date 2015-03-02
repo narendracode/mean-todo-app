@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var debug = require('debug')('mean-todo-app');
+var debug = require('debug')('mean-demo-app');
 var app = require('../app');
 
 app.set('port', process.env.PORT || 3000);
@@ -10,7 +10,7 @@ console.log('Express server listening on port ' + server.address().port);
 
 var io = require("socket.io").listen(server);
 
-io.on("connection",function(socket){
+var meetupNamespace = io.of('/meetup').on("connection",function(socket){
 console.log("Application connected");
 
 socket.on('disconnect',function(){
@@ -19,17 +19,18 @@ console.log("Application Disconnected");
 
 socket.on('meetup added',function(meetup){
 console.log("New Meetup added :"+meetup);
-io.emit('new meetup',meetup);
+meetupNamespace.emit('new meetup',meetup);
 });
 
 socket.on('meetup updated',function(meetup){
 console.log("Meetup Updated :"+meetup);
-io.emit('edit meetup',meetup);
+meetupNamespace.emit('edit meetup',meetup);
 });
 
 socket.on('meetup deleted',function(meetup){
 console.log("Meetup Deleted :"+meetup);
-io.emit('delete meetup',meetup);
+meetupNamespace.emit('delete meetup',meetup);
 });
 
 });
+
