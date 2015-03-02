@@ -1,3 +1,4 @@
 module.exports = {
-   db: 'mongodb://172.23.206.43/MeanDemo_test'
+    db: 'mongodb://192.168.1.106/meantodoapp_test',
+  privateKey: 'test-private-key'
 };

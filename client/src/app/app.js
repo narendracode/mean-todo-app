@@ -1,9 +1,10 @@
 angular.module('app', [
                 'ngResource',
                 'ui.router',
-                'meetups',
                 'authorization',
-                'authorization.services'
+                'authorization.services',
+		        'ngCookies',
+                'meetups'
                 ]
 );
 
@@ -19,37 +20,48 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 }]);
 
 
+angular.module('app').controller('AppCtrl', ['$scope','$cookieStore','$location','AuthService','$rootScope', function($scope,$cookieStore,$location,AuthService,$rootScope) {
 
-angular.module('app').controller('AppCtrl', ['$scope', function($scope) {
-  $scope.$on('$routeChangeError', function(event, current, previous, rejection){
+   var accessLevels = {
+        'user': ['user'],
+         'admin': ['admin','user']
+   };
 
-  });
+   $rootScope.hasAccess = function(level){
+    //  console.log('##### has access is called.. '+level);
+
+       if($rootScope.currentUser && accessLevels[$rootScope.currentUser['role']]){
+          if(accessLevels[$rootScope.currentUser['role']].indexOf(level) > -1)
+            return true;
+          else
+           return false;
+      }else
+       return false;
+   
+   }
+   
+   AuthService.currentUser(function(result){
+      	console.log(" $$$ current user info returned : "+JSON.stringify(result));
+		if(result['status']){
+			if(result['status']==404){
+				$rootScope.currentUser = null;               
+			}
+		}
+	});
+	$rootScope.currentUser = $cookieStore.get('user');
+
+	$scope.logout = function(){
+		
+		AuthService.logout(function(result){
+			console.log("Response after logout: "+JSON.stringify(result));
+			//if(result['status']==200){
+				$rootScope.currentUser = null;
+				$location.path('/login/');
+			//}
+		});
+	}
 }]);
 
-
-angular.module('app').controller('HeaderCtrl', ['$scope','$location','IsAuthenticatedService', function($scope,$location,IsAuthenticatedService) {
-
-    $scope.meetup = function(){
-        $location.path("/meetup/");
-    }
-    
-    $scope.isAuthenticated = function(){
-        console.log("  ##### isAuthenticated is called :"+IsAuthenticatedService.isLoggedIn);
-        return IsAuthenticatedService.isLoggedIn;
-    }
-    
-    $scope.isNotLoggedIn = function(){
-        return !IsAuthenticatedService.isLoggedIn;
-    }
-    
-    $scope.logout = function(){
-        IsAuthenticatedService.logout(function(result){
-            console.log('#### result of log out :'+JSON.stringify(result));
-            if(result['status']==200){
-                $location.path("/login/");
-            }
-        });
-    }
-    
+angular.module('app').controller('HeaderCtrl', ['$scope','$location','AuthService', function($scope,$location,AuthService) {    
 
 }]);

@@ -1,4 +1,4 @@
-angular.module('authorization',['ngResource','ui.bootstrap.showErrors','validation.match','angularMoment','ui.router','authorization.services']);
+angular.module('authorization',['ngResource','ui.router','ui.bootstrap.showErrors','validation.match','authorization.services']);
 
 angular.module('authorization').config(['$stateProvider','$urlRouterProvider',
 
@@ -16,50 +16,54 @@ function($stateProvider,$urlRouterProvider){
       templateUrl : 'app/authorization/signup.tpl.html',
       controller: 'AuthController'
     });
-    
-    
 }
 ]);
 
 
+angular.module('authorization').controller('AuthController',['$scope','$resource','$state','$location','AuthService','$window','$rootScope',
+    function($scope,$resource,$state,$location,AuthService,$window,$rootScope){
+        var AuthSignupResource = $resource('/auth/signup');   
+        var AuthLoginResource = $resource('/auth/login'); 
 
-angular.module('authorization').controller('AuthController',['$scope','$resource','$state','$location','IsAuthenticatedService',
-    function($scope,$resource,$state,$location,IsAuthenticatedService){
-        var AuthSignupResource = $resource('/signup');   
-        var AuthLoginResource = $resource('/login'); 
+  $scope.loginOauth = function(provider) {
+    $window.location.href = '/auth/' + provider;
+  };
 
         $scope.errorExists = false;
-        
            $scope.signup = function(){
                 $scope.$broadcast('show-errors-check-validity'); 
                 if ($scope.singupForm.$valid){
-                    var authResource = new AuthSignupResource();
-                    authResource.email = $scope.email;
-                    authResource.password = $scope.password;
-                    authResource.$save(function(result){
-                        if(result['message']){
+                  AuthService.signup({email:$scope.email,password:$scope.password},function(result){
+                    if(!result['type']){
                             $scope.errorExists = true;
-                            $scope.loginErrorMessage = result['message'];
+                            $scope.loginErrorMessage = result['data'];
                         }else{
-                         $location.path("/login/") 
+                            $location.path('/') 
                         }
-                    });
-                }   
+                });
+              }   
           }//signup
         
-           
          $scope.login = function(){
              $scope.$broadcast('show-errors-check-validity'); 
              if ($scope.loginForm.$valid){
-                 IsAuthenticatedService.login($scope.email,$scope.password,function(result){
-                    if(result['message']){
-                        $scope.errorExists = true;
-                        $scope.loginErrorMessage = result['message'];
+                 AuthService.login({'email':$scope.email,'password':$scope.password},function(result){
+                     if(!result['type']){
+                         $scope.errorExists = true;
+                         $scope.loginErrorMessage = result['data'];
                     }else{
                         $location.path("/meetup/") 
                     }
                  });
-             }
+            }
         }//login
+
+  $scope.logout = function(){
+    AuthService.logout(function(result){
+      if(result['status'] == 200){
+        $location.path('/login/');
+      } 
+    });
+  }
     }
 ]);

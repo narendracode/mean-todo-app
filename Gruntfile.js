@@ -27,8 +27,14 @@ module.exports = function(grunt){
 					'cp -r bower_components/jquery/dist/* client/vendor/jquery/',
 					'mkdir client/vendor/angular-ui-router',
 					'cp  bower_components/angular-ui-router/release/* client/vendor/angular-ui-router/',
-                    			'rm -r bower_components/*'
-				].join('&&')
+                    			'mkdir client/vendor/angular-http-auth',
+					'cp bower_components/angular-http-auth/src/http-auth-interceptor.js client/vendor/angular-http-auth/http-auth-interceptor.js',
+					'mkdir client/vendor/bootstrap-social',
+					'cp bower_components/bootstrap-social/bootstrap-social.css client/vendor/bootstrap-social/bootstrap-social.css',
+					'mkdir client/vendor/ngstorage',
+                                        'cp bower_components/ngstorage/ngStorage.min.js client/vendor/ngstorage/ngStorage.min.js',
+				        'rm -r bower_components/*'
+                                ].join('&&')
 			}	
 		}
 		

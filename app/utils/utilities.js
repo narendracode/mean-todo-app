@@ -1,6 +1,0 @@
-//isAuthenticated
-
-//isLoggedIn
-
-//requireAuthentication
-

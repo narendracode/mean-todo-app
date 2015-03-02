@@ -8,10 +8,7 @@ function($stateProvider,$urlRouterProvider){
     .state('meetup', {
       url: "/meetup/",
       templateUrl: 'app/meetups/list.tpl.html',
-      controller: 'MeetupsController',
-      onEnter: function(){
-        console.log('##### onEnter is called in meetup state');
-      }
+      controller: 'MeetupsController'
     })
     .state('meetupcreate',{
       url: "/meetup/create/",
@@ -32,10 +29,9 @@ function($stateProvider,$urlRouterProvider){
 ]);
 
 
-
+/*
 angular.module('meetups').run(function($rootScope,$location,IsAuthenticatedService) {
     $rootScope.$on('$stateChangeStart', function() {
-        console.log('### route scope state change is called..'+IsAuthenticatedService.isLoggedIn);
         if(!(!!IsAuthenticatedService.isLoggedIn)){
             console.log('user not logged in');
              $location.path("/login/")
@@ -43,12 +39,10 @@ angular.module('meetups').run(function($rootScope,$location,IsAuthenticatedServi
             
     });
 });
-
-
-
+*/
 
 angular.module('meetups').factory('socket',function(){
-    var socket = io.connect("http://192.168.0.13:3000");
+    var socket = io.connect("http://localhost:3000");
     return socket;
 });
 
@@ -80,12 +74,12 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
             });
                                                               
             
-            if(!$scope.meetups)
+            if(!$scope.meetups){
                 loadMeetups();
+            }
 
             $scope.createMeetup = function(){
                 $scope.$broadcast('show-errors-check-validity'); 
-                //broadcast the errors for all the fields which are required to be valid
                 if ($scope.meetupCreateForm.$valid){ 
                     var createMeetupResource = new MeetupResource();
                     createMeetupResource.name = $scope.meetupName;
@@ -101,7 +95,7 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
                         $location.path("/meetup/")
                     });
                 }
-            }//createMeetup()
+            }
             
             $scope.reset = function(){
                 $scope.$broadcast('show-errors-reset');
@@ -128,7 +122,7 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
                         socket.emit('meetup updated',result);
                     $location.path("/meetup/")
                 });
-            }//updateMeetup
+            }
             
             $scope.getMeetup = function(_id){
                 $scope.meetupUpdateService.$get({id : _id},function(result){
@@ -136,17 +130,13 @@ angular.module('meetups').controller('MeetupsController',['$scope','$resource','
                     $location.path("/meetup/"+_id+"/")
                 });
                 $scope.meetup
-            }//getMeetup
+            }
             
             $scope.deleteMeetup = function(_id){
                 $scope.meetupUpdateService.$delete({id: _id},function(result){
                      socket.emit('meetup deleted',result);
                     $location.path("/meetup/")
-                    /*  MeetupResource.query(function(results){
-                        $scope.meetups = results;
-                        $location.path("/")
-                      }); */
                 });
-            }//deleteMeetup
+            }
         }                                                         
 ]);

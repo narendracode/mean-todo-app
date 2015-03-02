@@ -24,24 +24,17 @@ var userSchema = mongoose.Schema({
         token        : String,
         email        : String,
         name         : String
-    }
-
+    },
+    token : String
 });
 
-/*
-userSchema.pre('save', function(next) {
-  if (!this.isNew) {
-    return next();
-  }
-
-  if (!validatePresenceOf(this.password)) {
-    next(new Error('Invalid password'));
-  }
-  else {
-    next();
-  }
+userSchema.plugin(require('mongoose-role'), {
+        roles: ['user', 'admin'],
+        accessLevels: {
+                'admin': ['user', 'admin'],
+                'user': ['user']
+        }
 });
-*/
 
 
 userSchema.virtual('password')

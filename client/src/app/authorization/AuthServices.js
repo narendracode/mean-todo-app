@@ -1,53 +1,104 @@
-var module = angular.module('authorization.services',['ngResource']);
+var module = angular.module('authorization.services',['ngResource','ngCookies','ngStorage']);
 
-module.factory('IsAuthenticatedService',function($resource,$rootScope){
-   
-// The public API of the service
+
+
+module.factory('AuthService',function($resource,$rootScope,$location,$cookieStore,$localStorage){
+
+  var LoginResource = $resource('/auth/login');
+  var LogoutResource = $resource('/auth/logout');
+  var SignupResource = $resource('/auth/signup'); 
+
+  function urlBase64Decode(str) {
+       var output = str.replace('-', '+').replace('_', '/');
+       switch (output.length % 4) {
+           case 0:
+             break;
+           case 2:
+              output += '==';
+              break;
+           case 3:
+              output += '=';
+              break;
+           default:
+              throw 'Illegal base64url string!';
+        }
+        return window.atob(output);
+   }
+ 
+   function getUserFromToken() {
+       var token = $localStorage.token;
+        var user = {};
+        if (typeof token !== 'undefined') {
+           var encoded = token.split('.')[1];
+            user = JSON.parse(urlBase64Decode(encoded));
+        }
+        return user;
+   }
+
+
+  // The public API of the service
   var service = {
-      init: function () {
-            this.resetSession();
+      login: function(user,callback){
+	var loginResource = new LoginResource();
+	loginResource.email = user.email;
+	loginResource.password = user.password;
+	loginResource.$save(function(result){
+        if(typeof result !== 'undefined'){
+            if(result.type){
+                $localStorage.token = result.token;
+                $cookieStore.put('user',result.data);
+                $rootScope.currentUser = result.data;
+            }
+        }
+		callback(result);
+	}); 
       },
-      resetSession: function() {
-            this.currentUser = null;
-            this.isLoggedIn = false;
+      logout : function(callback){
+	var logoutResource = new LogoutResource();
+	logoutResource.$save(function(result){
+			$rootScope.currentUser = null;
+			$cookieStore.remove('user');
+			delete $localStorage.token;
+			callback(result);
+	});
       },
-      login: function(email, password,done) {
-          var scope = this;
-          var AuthLoginResource = $resource('/login'); 
-          var authResource = new AuthLoginResource();
-          authResource.email = email;
-          authResource.password = password;
-          authResource.$save(function(result){
-              if(!(!!result['message'])){
-                scope.authSuccess(result);
-              }
-              done(result);
-          });
+      signup: function(user,callback){
+	var signupResource = new SignupResource();
+	signupResource.email = user.email;
+	signupResource.password = user.password;
+	signupResource.$save(function(result){
+        if(typeof result !== 'undefined'){
+            console.log("##### result of signup.. "+JSON.stringify(result));
+            if(result.type){
+                $localStorage.token = result.token;
+                $cookieStore.put('user',result.data);
+                $rootScope.currentUser = result.data;
+            }
+        }
+		callback(result);
+	});
       },
-      logout: function(done) {
-            var scope = this;
-          var AuthLogoutResource = $resource('/logout');
-          var authLogoutResource = new AuthLogoutResource();
-          authLogoutResource.$save(function(result){
-                if(result['status']==200){
-                     scope.resetSession();
-                    $rootScope.$emit('session-changed');
-                }else if(result['status']==404){
-                    //do nothing..
-                }
-              done(result);
-          });
-      },
-      authSuccess: function(userData) {
-            this.currentUser = userData;
-            this.isLoggedIn = true;
-            $rootScope.$emit('session-changed');
-      },
-      authFailed: function() {
-            this.resetSession();
-      }
+     currentUser: function(callback){
+     	var token = $localStorage.token;
+         console.log(" ## Token found : "+token);
+     	var userData = {};
+     	 if (typeof token !== 'undefined') {
+             var encoded = token.split('.')[1];
+             userData = JSON.parse(urlBase64Decode(encoded));
+             if(userData){
+                $cookieStore.put('user',userData);
+				$rootScope.currentUser = userData;
+             }
+             callback(userData);
+         }else
+           callback({message:"nothing found "});
+    }
+  
+     /*,
+     changePassword: function(){},
+     removeUser: functionk(){}
+      */
   }
- // service.init();
   return service;
   
 });
